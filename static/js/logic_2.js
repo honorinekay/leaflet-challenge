@@ -77,7 +77,7 @@ L.geoJSON(data, {
     }
     
 
-}).addTo(myMap);
+}).addTo(earthquakes);
 
 
 
