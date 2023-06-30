@@ -64,7 +64,7 @@ d3.json(queryUrl).then(function (data) {
         return {
             radius: markerSize(feature.properties.mag),
             fillColor: "green",
-            color: "#black",
+            color: "black",
             weight: 1,
             opacity: 1,
             fillOpacity: 0.7
@@ -72,7 +72,7 @@ d3.json(queryUrl).then(function (data) {
     }
 
     L.geoJSON(data, {
-        pointTolayer: function (feature, latlng) {
+        pointToLayer: function (feature, latlng) {
             return L.circleMarker(latlng);
         },
 

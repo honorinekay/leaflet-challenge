@@ -54,15 +54,15 @@ d3.json(queryUrl).then(function (data) {
 var geojsonMarkeroptions = {
     radius: 10,
     fillColor: "green",
-    color: "#black",
+    color: "black",
     weight: 1,
     opacity: 1,
     fillOpacity: 0.7
 };
 
 L.geoJSON(data, {
-    pointTolayer: function (feature, latlng) {
-        return L.circleMarker(latlng, geojsonMarkerOptions);
+    pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, geoJSONMarkerOptions);
     },
 
     // use onEachFeature to add a popup with location, time and magnitude and depth
