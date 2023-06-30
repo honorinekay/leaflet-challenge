@@ -1,8 +1,12 @@
 // check to see if links work
-console.log("start of map using logic" );
+console.log("start of map using logic");
 
 // logic_1 creates the initial tile layers, a layerGroup for the earthquakes and a layer control
 // logic_2 gets the USGS earthquake data and creates a circleMarker for each earthquake using a common radius, common color and popup with location, time and magnitude and depth
+
+// logic_3 creates circleMarker with radius as a function of magnitude markerSize()
+// and color as a function of depth: function called markerColor()
+// with an overall styleInfo function that calls both styleInfo()
 
 // Create the base layers.
 let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -30,7 +34,7 @@ let overlayMaps = {
 // Create our map, giving it the streetmap and earthquakes layers to display on load.
 let myMap = L.map("map", {
     center: [
-      37.09, -95.71
+        37.09, -95.71
     ],
     zoom: 3.5,
     layers: [street, earthquakes]
@@ -47,41 +51,52 @@ L.control.layers(baseMaps, overlayMaps, {
 let queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/1.0_week.geojson"
 // Perform a d3.json AJAX to the query URL/
 d3.json(queryUrl).then(function (data) {
-  // Once we get a response, send the data.features object to the createFeatures function.
-  console.log(data.features[0]);
+    // Once we get a response, send the data.features object to the createFeatures function.
+    console.log(data.features[0]);
 
-// create a GeoJSON layer using data
-var geojsonMarkeroptions = {
-    radius: 10,
-    fillColor: "green",
-    color: "#black",
-    weight: 1,
-    opacity: 1,
-    fillOpacity: 0.7
-};
 
-L.geoJSON(data, {
-    pointTolayer: function (feature, latlng) {
-        return L.circleMarker(latlng, geojsonMarkerOptions);
-    },
+    function markerSize(magnitude) {
+        return magnitude * 4
+    }
 
-    // use onEachFeature to add a popup with location, time and magnitude and depth
-    onEachFeature: function onEachFeature(feature, layer) {
-        layer.bindPopup(`
+    // create a GeoJSON layer using data
+    function styleInfo(feature) {
+        return {
+            radius: markerSize(feature.properties.mag),
+            fillColor: "green",
+            color: "#black",
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.7
+        };
+    }
+
+    L.geoJSON(data, {
+        pointTolayer: function (feature, latlng) {
+            return L.circleMarker(latlng);
+        },
+
+        // use styleInfo to define circleMarker style
+        style: styleInfo,
+
+
+        // use onEachFeature to add a popup with location, time and magnitude and depth
+        onEachFeature: function onEachFeature(feature, layer) {
+            layer.bindPopup(`
         <h3>${feature.properties.place}</h3>
         <hr>
         <p>${new Date(feature.properties.time)}</p>
         <h3>Magnitude: ${feature.properties.mag.toLocaleString()}</h3>
         <h3>Depth: ${feature.geometry.coordinates[2].toLocaleString()}</h3>
         `);
-    }
-    
-
-}).addTo(earthquakes);
+        }
 
 
+    }).addTo(earthquakes);
 
 
-// data with d3 is only available above this point!
+
+
+    // data with d3 is only available above this point!
 });
 
