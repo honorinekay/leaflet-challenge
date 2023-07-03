@@ -59,11 +59,27 @@ d3.json(queryUrl).then(function (data) {
         return magnitude * 4
     }
 
+    // create a function for markerColor using depth (km)
+    function markerColor(depth) {
+        return depth > 150 ? '#d73027' :
+        depth > 100 ? '#f46d43' :
+        depth > 50 ? '#fdae61' :
+        depth > 25 ? '#fee08b' :
+        depth > 10 ? '#d9ef8b' :
+        depth > 5 ? '#a6d96a' :
+        depth > 2 ? '#66bd63' :
+                     '#1a9850';
+
+
+    }
+
+
+
     // create a GeoJSON layer using data
     function styleInfo(feature) {
         return {
             radius: markerSize(feature.properties.mag),
-            fillColor: "green",
+            fillColor: markerColor(feature.geometry.coordinates[2]),
             color: "black",
             weight: 1,
             opacity: 1,

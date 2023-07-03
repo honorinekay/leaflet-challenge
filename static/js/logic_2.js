@@ -62,7 +62,7 @@ var geojsonMarkeroptions = {
 
 L.geoJSON(data, {
     pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng, geoJSONMarkerOptions);
+        return L.circleMarker(latlng, geojsonMarkeroptions);
     },
 
     // use onEachFeature to add a popup with location, time and magnitude and depth
